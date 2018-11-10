@@ -1,6 +1,6 @@
 package app.base
 
-import android.app.Application
+import androidx.multidex.MultiDexApplication
 import app.base.di.IBuildComp
 import app.base.di.component.AppComp
 import app.base.di.component.DaggerAppComp
@@ -9,7 +9,7 @@ import app.base.di.modules.*
 /**
  * Created by daniel on 17-12-23.
  */
-open class BaseApplication():Application(),IBuildComp{
+open class BaseApplication():MultiDexApplication(),IBuildComp{
     lateinit var appComp: AppComp
     override fun onCreate() {
         super.onCreate()
