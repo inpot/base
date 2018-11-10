@@ -93,9 +93,7 @@ dependencies {
     // optional - RxJava support, currently in release candidate
     api "android.arch.paging:rxjava2:1.0.0-rc1"
 }
-kapt {
-    generateStubs = true
-}
+
 repositories {
     mavenCentral()
 }
