@@ -28,8 +28,8 @@ object HttpModules {
     @PerApplication
     fun provideRetrofit(moshi: Moshi, context: Context, preference:SharedPreferences): Retrofit {
         val baseUrl = context.getString(R.string.api_host)
-        val httpClient = OkHttpClient()
-        httpClient.interceptors().add(Interceptor {
+        val okHttpBuilder= OkHttpClient.Builder()
+        okHttpBuilder.addInterceptor {
             val original = it.request();
             val token = preference.getString("token",null)
             val requestBuilder = original.newBuilder()
@@ -38,10 +38,10 @@ object HttpModules {
             }
             val request = requestBuilder.build();
             it .proceed(request);
-        })
 
+        }
         val builder = Retrofit.Builder().baseUrl(baseUrl)
-                .client(httpClient)
+                .client(okHttpBuilder.build())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(MoshiConverterFactory.create(moshi))
         return builder.build()
