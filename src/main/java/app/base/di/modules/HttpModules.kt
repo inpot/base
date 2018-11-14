@@ -33,7 +33,7 @@ object HttpModules {
             val original = it.request();
             val token = preference.getString("token",null)
             val requestBuilder = original.newBuilder()
-            if(TextUtils.isEmpty(token)){
+            if(!TextUtils.isEmpty(token)){
                 requestBuilder.addHeader("token", "value1")
             }
             val request = requestBuilder.build();
