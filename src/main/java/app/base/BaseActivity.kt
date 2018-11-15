@@ -12,6 +12,7 @@ import androidx.appcompat.widget.Toolbar
 import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
 import android.widget.ProgressBar
+import android.widget.Toast
 import app.base.di.IBuildComp
 import app.base.di.component.ActivityComp
 import app.base.di.component.DaggerActivityComp
@@ -39,9 +40,15 @@ abstract class BaseActivity : AppCompatActivity(), IBuildComp, IBaseView {
                 .build()
         buildComp()
     }
+    @CallSuper
+    override fun showToast(msg:String){
+        Toast.makeText(this, msg,Toast.LENGTH_SHORT).show()
+    }
 
     @CallSuper
     override fun showError(e: Throwable){
+        val msg = e.message
+        msg?.apply { showToast(msg) }
         e.printStackTrace()
     }
 

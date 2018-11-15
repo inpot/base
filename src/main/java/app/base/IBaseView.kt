@@ -10,4 +10,5 @@ interface IBaseView{
     fun onCreateLoadingDialog():AppCompatDialog?
     fun dismissLoading()
     fun showError(e: Throwable)
+    fun showToast(msg:String)
 }

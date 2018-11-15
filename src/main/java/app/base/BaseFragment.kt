@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatDialog
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ProgressBar
+import android.widget.Toast
 import app.base.di.IBuildComp
 import app.base.di.component.ActivityComp
 import app.base.di.component.DaggerFragmentComp
@@ -60,6 +61,8 @@ abstract class BaseFragment : Fragment(), IBuildComp, IBaseView {
 
     @CallSuper
     override fun showError(e: Throwable) {
+        val msg = e.message
+        msg?.apply { showToast(msg) }
         e.printStackTrace()
     }
 
@@ -84,6 +87,12 @@ abstract class BaseFragment : Fragment(), IBuildComp, IBaseView {
             loadingDialog
         }else{
             null
+        }
+    }
+
+    override fun showToast(msg: String) {
+        context?.apply {
+            Toast.makeText(this,msg,Toast.LENGTH_SHORT).show()
         }
     }
 }
