@@ -95,4 +95,11 @@ abstract class BaseFragment : Fragment(), IBuildComp, IBaseView {
             Toast.makeText(this,msg,Toast.LENGTH_SHORT).show()
         }
     }
+
+    @CallSuper
+    override fun showToast(msgId: Int) {
+        context?.apply {
+            Toast.makeText(this, msgId, Toast.LENGTH_SHORT).show()
+        }
+    }
 }

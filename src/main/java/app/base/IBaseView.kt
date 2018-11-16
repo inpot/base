@@ -11,4 +11,5 @@ interface IBaseView{
     fun dismissLoading()
     fun showError(e: Throwable)
     fun showToast(msg:String)
+    fun showToast(msgId:Int)
 }

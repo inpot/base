@@ -46,6 +46,11 @@ abstract class BaseActivity : AppCompatActivity(), IBuildComp, IBaseView {
     }
 
     @CallSuper
+    override fun showToast(msgId: Int) {
+        Toast.makeText(this, msgId,Toast.LENGTH_SHORT).show()
+    }
+
+    @CallSuper
     override fun showError(e: Throwable){
         val msg = e.message
         msg?.apply { showToast(msg) }
