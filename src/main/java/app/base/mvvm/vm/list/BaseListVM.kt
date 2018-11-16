@@ -19,6 +19,7 @@ abstract class BaseListVM<Rep : IRepository, V : IView, D : Any>() :ILoadMore, B
         this.repository = repository
         this.view = view
         this.adapter = adapter
+        adapter.loadMore = this
         this.layoutManager = layoutManager
     }
 
@@ -30,10 +31,6 @@ abstract class BaseListVM<Rep : IRepository, V : IView, D : Any>() :ILoadMore, B
     val refreshingListener = SwipeRefreshLayout.OnRefreshListener {
         currentPage = 0
         loadData()
-    }
-
-    init {
-        adapter.loadMore = this
     }
 
     fun loadData() {
