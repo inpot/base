@@ -3,18 +3,16 @@ package app.base.di.modules
 import android.content.Context
 import android.content.SharedPreferences
 import android.text.TextUtils
-import android.util.Log
 import app.base.BuildConfig
 import app.base.R
+import app.base.di.HttpLogInterceptor
 import app.base.di.scope.PerApplication
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.Response
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -35,6 +33,11 @@ object HttpModules {
         okHttpBuilder.connectTimeout(30, TimeUnit.SECONDS)
         okHttpBuilder.readTimeout(30, TimeUnit.SECONDS)
         okHttpBuilder.writeTimeout(30,TimeUnit.SECONDS)
+        if(BuildConfig.DEBUG) {
+            val logging = HttpLogInterceptor()
+            logging.level = HttpLogInterceptor.Level.BODY
+            okHttpBuilder.addInterceptor(logging)
+        }
         okHttpBuilder.addInterceptor {
             val original = it.request();
             val token = preference.getString("token",null)
@@ -44,9 +47,6 @@ object HttpModules {
             }
             val request = requestBuilder.build();
             val response = it .proceed(request);
-            if(BuildConfig.DEBUG){
-                Log.i("http"," ${original.method()} : ${original.url()} + ${original.headers()}")
-            }
             response
         }
         val builder = Retrofit.Builder().baseUrl(baseUrl)
