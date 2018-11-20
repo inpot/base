@@ -1,10 +1,7 @@
 package app.base.di
 
 import android.util.Log.INFO
-import okhttp3.Headers
-import okhttp3.Interceptor
-import okhttp3.Protocol
-import okhttp3.Response
+import okhttp3.*
 import okhttp3.internal.http.HttpHeaders
 import okhttp3.internal.platform.Platform
 import okio.Buffer
@@ -138,26 +135,35 @@ class HttpLogInterceptor : Interceptor {
             } else if (bodyEncoded(request.headers())) {
                 logger.log("--> END " + request.method() + " (encoded body omitted)")
             } else {
-                val buffer = Buffer()
-                requestBody!!.writeTo(buffer)
+                if (requestBody is MultipartBody) {
+                    requestBody.parts().forEach {
+                        val contentType = it.body().contentType()
+                        if (contentType == null) {
+                            logger.log("${it.headers().toString()}=????")
+                        }
+                    }
 
-                var charset = UTF8
-                val contentType = requestBody!!.contentType()
-                if (contentType != null) {
-                    charset = contentType!!.charset(UTF8)
-                }
-
-                if (isPlaintext(buffer)) {
-                    logger.log(buffer.readString(charset))
-                    logger.log(
-                        "--> END " + request.method()
-                                + " (" + requestBody!!.contentLength() + "-byte body)"
-                    )
                 } else {
-                    logger.log(
-                        ("--> END " + request.method() + " (binary "
-                                + requestBody!!.contentLength() + "-byte body omitted)")
-                    )
+                    val buffer = Buffer()
+                    requestBody!!.writeTo(buffer)
+                    var charset = UTF8
+                    val contentType = requestBody!!.contentType()
+                    if (contentType != null) {
+                        charset = contentType!!.charset(UTF8)
+                    }
+
+                    if (isPlaintext(buffer)) {
+                        logger.log(buffer.readString(charset))
+                        logger.log(
+                            "--> END " + request.method()
+                                    + " (" + requestBody!!.contentLength() + "-byte body)"
+                        )
+                    } else {
+                        logger.log(
+                            ("--> END " + request.method() + " (binary "
+                                    + requestBody!!.contentLength() + "-byte body omitted)")
+                        )
+                    }
                 }
             }
         }
@@ -174,7 +180,7 @@ class HttpLogInterceptor : Interceptor {
         val tookMs = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startNs)
 
         val responseBody = response.body()
-        val contentLength = responseBody?.contentLength()?:-1L
+        val contentLength = responseBody?.contentLength() ?: -1L
         val bodySize = if (contentLength != -1L) "$contentLength -byte" else "unknown-length"
         logger.log(
             ("<-- " + response.code() + ' ' + response.message() + ' '
@@ -197,7 +203,7 @@ class HttpLogInterceptor : Interceptor {
                 val source = responseBody?.source()
                 source?.request(java.lang.Long.MAX_VALUE) // Buffer the entire body.
                 val buffer = source?.buffer()
-                if(buffer != null){
+                if (buffer != null) {
 
 
                     var charset = UTF8
