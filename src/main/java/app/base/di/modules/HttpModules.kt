@@ -44,6 +44,10 @@ object HttpModules {
             if(!TextUtils.isEmpty(token)){
                 requestBuilder.addHeader("token", token)
             }
+            val phoneId = preference.getString("phone_id",null)
+            if(!TextUtils.isEmpty(phoneId)){
+                requestBuilder.addHeader("x-deviceId", phoneId)
+            }
             val request = requestBuilder.build();
             val response = it .proceed(request);
             response
