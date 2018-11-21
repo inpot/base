@@ -1,8 +1,9 @@
 package app.base
 
+import android.content.res.Resources
+import android.graphics.drawable.Drawable
 import androidx.databinding.InverseBindingAdapter
 import androidx.databinding.InverseBindingListener
-import android.graphics.drawable.Drawable
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayout
 import androidx.core.view.GravityCompat
@@ -24,25 +25,28 @@ import android.widget.GridView
 import android.widget.ImageView
 import android.widget.ListAdapter
 import android.widget.TextView
+import androidx.databinding.BindingAdapter
 
 import app.base.di.scope.ListType
 import app.base.widget.OnTextChanged
 import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestBuilder
+import com.bumptech.glide.request.RequestOptions
 
 
-@androidx.databinding.BindingAdapter(value = ["normalTitleColor", "selectedTitleColor"], requireAll = true)
+@BindingAdapter(value = ["normalTitleColor", "selectedTitleColor"], requireAll = true)
 fun bindTabLayoutTextColor(tabLayout: TabLayout, normalTitleColor: Int, selectedTitleColor: Int) {
     tabLayout.setTabTextColors(normalTitleColor, selectedTitleColor)
 }
 
-@androidx.databinding.BindingAdapter(value = ["android:checked", "onCheckedChangeListener"])
+@BindingAdapter(value = ["android:checked", "onCheckedChangeListener"])
 fun bindCheckedState(compoundButton: CompoundButton, checked: Boolean, onCheckedChangeListener: CompoundButton.OnCheckedChangeListener) {
     compoundButton.setOnCheckedChangeListener(null)
     compoundButton.isChecked = checked
     compoundButton.setOnCheckedChangeListener(onCheckedChangeListener)
 }
 
-@androidx.databinding.BindingAdapter(value = ["viewPager", "adapter"])
+@BindingAdapter(value = ["viewPager", "adapter"])
 fun bindTabLayoutToViewPager(tabLayout: TabLayout, viewPagerId: Int, pagerAdapter: PagerAdapter) {
     val viewPager = tabLayout.rootView.findViewById<View>(viewPagerId) as ViewPager
     if (viewPager.adapter == null)
@@ -50,7 +54,7 @@ fun bindTabLayoutToViewPager(tabLayout: TabLayout, viewPagerId: Int, pagerAdapte
     tabLayout.setupWithViewPager(viewPager)
 }
 
-@androidx.databinding.BindingAdapter(value = ["isDrawerOpen", "drawerGravity"])
+@BindingAdapter(value = ["isDrawerOpen", "drawerGravity"])
 fun controlDrawer(drawerLayout: DrawerLayout, isDrawerOpen: Boolean, gravity: Int) {
     if (isDrawerOpen) {
         drawerLayout.openDrawer(gravity)
@@ -59,58 +63,54 @@ fun controlDrawer(drawerLayout: DrawerLayout, isDrawerOpen: Boolean, gravity: In
     }
 }
 
+fun getPath(resources:Resources,url:String?):String{
+    if(url != null && TextUtils.isEmpty(url)){
 
-@androidx.databinding.BindingAdapter(value = ["blurImageUrl", "placeHolder"])
-fun loadImageByUrlBlur(imageView: ImageView, url: String, placeHolder: Drawable) {
-    if (TextUtils.isEmpty(url)) {
-        Glide.with(imageView.context)
-                .load(placeHolder)
-                .into(imageView)
-        return
+        return if(url.startsWith("http")){ url
+        }else{
+            "${resources.getString(R.string.api_host)}$url"
+        }
+    }else{
+        return ""
     }
-    Glide.with(imageView.context)
-            .load(url)
-            .into(imageView)
+
 }
 
-@androidx.databinding.BindingAdapter(value = ["blurImageUrl", "placeHolder"])
-fun loadImageByUrlBlur(imageView: ImageView, url: String, placeHolderRes: Int) {
-    if (TextUtils.isEmpty(url)) {
-        Glide.with(imageView.context)
-                .load(placeHolderRes)
-                .into(imageView)
-        return
-    }
-    Glide.with(imageView.context)
-            .load(url)
-            .into(imageView)
-}
 
-@androidx.databinding.BindingAdapter(value = ["imgUrl", "placeHolder", "showFade"], requireAll = false)
-fun loadImageByPath(imageView: ImageView, imgurl: String, placeHolder: Drawable, showFade: Boolean) {
-    Glide.with(imageView.context).clear(imageView)
-    if (TextUtils.isEmpty(imgurl)) {
+@BindingAdapter(value = ["blurImageUrl", "placeHolder"])
+fun loadImageByUrlBlur(imageView: ImageView, url: String?, placeHolder: Drawable) {
+    var path = getPath(imageView.context.resources,url)
+    if(TextUtils.isEmpty(path)){
         imageView.setImageDrawable(placeHolder)
-        return
-    }
-    if (showFade) {
-        Glide.with(imageView.context).load(imgurl).into(imageView)
-    } else {
-        Glide.with(imageView.context).load(imgurl).into(imageView)
+    }else{
+        val option = RequestOptions().placeholder(placeHolder).error(placeHolder).fallback(placeHolder)
+        Glide.with(imageView.context)
+            .load(path)
+            .apply(option)
+            .into(imageView)
     }
 }
 
-@androidx.databinding.BindingAdapter(value = ["android:src"])
-fun setImageResource(imageView: ImageView, res: Int) {
-    imageView.setImageResource(res)
+@BindingAdapter(value = ["blurImageUrl", "placeHolder"])
+fun loadImageByUrlBlur(imageView: ImageView, url: String?, placeHolderRes: Int) {
+    var path = getPath(imageView.context.resources,url)
+    if(TextUtils.isEmpty(path)){
+        imageView.setImageResource(placeHolderRes)
+    }
+    val option = RequestOptions().placeholder(placeHolderRes).error(placeHolderRes).fallback(placeHolderRes)
+    Glide.with(imageView.context)
+        .load(path)
+        .apply(option)
+        .into(imageView)
 }
 
-@androidx.databinding.BindingAdapter(value = ["android:drawableRight"])
+
+@BindingAdapter(value = ["android:drawableRight"])
 fun setDrawableRight(textView: TextView, res: Int) {
     textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, res, 0)
 }
 
-@androidx.databinding.BindingAdapter(value = ["textRes", "textColorRes"], requireAll = false)
+@BindingAdapter(value = ["textRes", "textColorRes"], requireAll = false)
 fun setTextRes(textView: TextView, textRes: Int, textColorRes: Int) {
     if (textRes > 0)
         textView.setText(textRes)
@@ -118,17 +118,17 @@ fun setTextRes(textView: TextView, textRes: Int, textColorRes: Int) {
         textView.setTextColor(textView.resources.getColor(textColorRes))
 }
 
-@androidx.databinding.BindingAdapter(value = ["onTextChanged"])
+@BindingAdapter(value = ["onTextChanged"])
 fun bindTextChangedListener(editText: EditText, onTextChanged: OnTextChanged) {
     editText.onTextChange { onTextChanged.onTextChanged(it) }
 }
 
-@androidx.databinding.BindingAdapter(value = ["expand", "withAnim"])
+@BindingAdapter(value = ["expand", "withAnim"])
 fun setAppBarLayoutExpended(appBarLayout: AppBarLayout, expand: Boolean, withAnim: Boolean) {
     appBarLayout.setExpanded(expand, withAnim)
 }
 
-@androidx.databinding.BindingAdapter(value = ["layoutManager", "adapter", "onScrollListener"])
+@BindingAdapter(value = ["layoutManager", "adapter", "onScrollListener"])
 fun bindLoadMoreRecyclerView(recyclerView: RecyclerView,
                              layoutManager: RecyclerView.LayoutManager,
                              adapter: RecyclerView.Adapter<*>,
@@ -138,13 +138,13 @@ fun bindLoadMoreRecyclerView(recyclerView: RecyclerView,
     recyclerView.addOnScrollListener(onScrollListener)
 }
 
-@androidx.databinding.BindingAdapter(value = ["showPassword"])
+@BindingAdapter(value = ["showPassword"])
 fun bindEditTextInputType(editText: EditText, showPassword: Boolean) {
     editText.inputType = if (showPassword) InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD else InputType.TYPE_TEXT_VARIATION_PASSWORD or InputType.TYPE_CLASS_TEXT
     editText.setSelection(if (editText.text == null) 0 else editText.text.length)
 }
 
-@androidx.databinding.BindingAdapter(value = ["orientation"])
+@BindingAdapter(value = ["orientation"])
 fun bindRecyclerView(recyclerView: RecyclerView, orientation: String) {
     var ori = if (TextUtils.equals(orientation, ListType.HORIZONTAL)) RecyclerView.HORIZONTAL else RecyclerView.VERTICAL
     when (orientation) {
@@ -155,7 +155,7 @@ fun bindRecyclerView(recyclerView: RecyclerView, orientation: String) {
     recyclerView.layoutManager = LinearLayoutManager(recyclerView.context, ori, false)
 }
 
-@androidx.databinding.BindingAdapter(value = ["requestFocus"])
+@BindingAdapter(value = ["requestFocus"])
 fun bindRequestFocusEvent(editText: EditText, requestFocus: Boolean) {
     if (requestFocus) {
         editText.requestFocusFromTouch()
@@ -169,7 +169,7 @@ fun bindRequestFocusEvent(editText: EditText, requestFocus: Boolean) {
  *
  *
  */
-@androidx.databinding.BindingAdapter(value = ["refreshing", "refreshListener", "refreshingAttrChanged"], requireAll = false)
+@BindingAdapter(value = ["refreshing", "refreshListener", "refreshingAttrChanged"], requireAll = false)
 fun bindSwipRefreshingState(swipeRefreshLayout: SwipeRefreshLayout, refreshing: Boolean, onRefreshListener: SwipeRefreshLayout.OnRefreshListener?, bindingListener: InverseBindingListener) {
     swipeRefreshLayout.isRefreshing = refreshing
     swipeRefreshLayout.setOnRefreshListener {
@@ -184,7 +184,7 @@ fun bindingIsRefresing(swipeRefreshLayout: SwipeRefreshLayout): Boolean {
     return swipeRefreshLayout.isRefreshing
 }
 
-@androidx.databinding.BindingAdapter(value = ["drawerVisible"])
+@BindingAdapter(value = ["drawerVisible"])
 fun toggleDrawer(drawerLayout: DrawerLayout, drawerVisible: Boolean) {
     if (drawerVisible) {
         if (drawerLayout.isDrawerOpen(GravityCompat.START))
@@ -197,7 +197,7 @@ fun toggleDrawer(drawerLayout: DrawerLayout, drawerVisible: Boolean) {
     }
 }
 
-@androidx.databinding.BindingAdapter(value = ["icon", "msg"])
+@BindingAdapter(value = ["icon", "msg"])
 fun bindEmptyViewDrawable(textView: TextView, iconRes: Int, msgRes: Int) {
     if (iconRes != 0)
         textView.setCompoundDrawablesWithIntrinsicBounds(0, iconRes, 0, 0)
@@ -206,19 +206,19 @@ fun bindEmptyViewDrawable(textView: TextView, iconRes: Int, msgRes: Int) {
 }
 
 
-@androidx.databinding.BindingAdapter(value = ["globalLayoutListener"])
+@BindingAdapter(value = ["globalLayoutListener"])
 fun bindOnGlobalLayoutListener(view: View, onGlobalLayoutListener: ViewTreeObserver.OnGlobalLayoutListener) {
     view.viewTreeObserver.addOnGlobalLayoutListener(onGlobalLayoutListener)
 }
 
-@androidx.databinding.BindingAdapter(value = ["colorSchemeResources"])
+@BindingAdapter(value = ["colorSchemeResources"])
 fun bingSwipRefeshSchemaColor(refreshLayout: SwipeRefreshLayout, colorSchemeResources: Int) {
     val colors = intArrayOf(colorSchemeResources)
     refreshLayout.setColorSchemeColors(*colors)
 }
 
 
-@androidx.databinding.BindingAdapter(value = ["adapter"])
+@BindingAdapter(value = ["adapter"])
 fun bingGridView(gridView: GridView, adapter: ListAdapter) {
     gridView.adapter = adapter
     adapter.apply {  }
