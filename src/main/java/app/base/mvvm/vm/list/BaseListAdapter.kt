@@ -112,7 +112,7 @@ abstract class BaseListAdapter<D : Any> : RecyclerView.Adapter<RecyclerView.View
 
             lists.size -> {
                 if (header) {
-                    TYPE_CONTENT
+                    res = TYPE_CONTENT
                 } else {
                     res = footerType
                 }
@@ -129,11 +129,12 @@ abstract class BaseListAdapter<D : Any> : RecyclerView.Adapter<RecyclerView.View
      */
     abstract fun onCreateItemBinding( layoutInflater: LayoutInflater, parent: ViewGroup ): ViewDataBinding
 
-    fun onCreateHeaderBinding( layoutInflater: LayoutInflater, layoutId:Int, parent: ViewGroup): ViewDataBinding{
+    private fun onCreateHeaderBinding(layoutInflater: LayoutInflater, layoutId:Int, parent: ViewGroup): ViewDataBinding{
       return DataBindingUtil.inflate<ViewDataBinding>(layoutInflater,layoutId,parent,false)
     }
 
     open fun getHeaderLayoutId() = R.layout.list_header
+    open fun bindingHeader(holder: RecyclerView.ViewHolder){}
 
     abstract fun onCreateVM(position: Int, data: D): Any
 
@@ -151,7 +152,7 @@ abstract class BaseListAdapter<D : Any> : RecyclerView.Adapter<RecyclerView.View
                     holder.bindingVM(onCreateVM(position, lists[indexInLists]))
                 }
                 TYPE_HEADER -> {
-                    //TODO
+                    bindingHeader(holder)
                 }
                 TYPE_FOOTER_LOADING -> {
                     loadMore?.onLoadMore()

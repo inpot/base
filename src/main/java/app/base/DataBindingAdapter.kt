@@ -64,8 +64,7 @@ fun controlDrawer(drawerLayout: DrawerLayout, isDrawerOpen: Boolean, gravity: In
 }
 
 fun getPath(resources:Resources,url:String?):String{
-    if(url != null && TextUtils.isEmpty(url)){
-
+    if(url != null && !TextUtils.isEmpty(url)){
         return if(url.startsWith("http")){ url
         }else{
             "${resources.getString(R.string.api_host)}$url"
