@@ -23,6 +23,14 @@ abstract class BaseListVM<Rep : IRepository, V : IView, D : Any>() :ILoadMore, B
         this.layoutManager = layoutManager
     }
 
+    open fun initialize(repository: Rep, view: V, layoutManager: RecyclerView.LayoutManager, adapter: BaseListAdapter<D>) {
+        this.repository = repository
+        this.view = view
+        this.adapter = adapter
+        adapter.loadMore = this
+        this.layoutManager = layoutManager
+    }
+
     open var PAGE_SIZE = 25
     private var currentPage = 0
     var refreshing = ObservableBoolean(false)

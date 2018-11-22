@@ -2,5 +2,6 @@
     <string name="app_name">base</string>
     <string name="no_more">没有更多数据</string>
     <string name="load_error">加载失败</string>
+    <string name="list_header">Header here</string>
     <string name="api_host">Please Config Api Host in app</string>
 </resources>

@@ -18,7 +18,11 @@ abstract class BaseVM<Rep : IRepository, V: IView> () :ViewModel(){
     open fun isInitialized() :Boolean{
         val result = ::view.isInitialized && ::repository.isInitialized
         return result
+    }
 
+    open fun initialize(repository:Rep,view:V){
+        this.repository = repository
+        this.view = view
     }
 
 }

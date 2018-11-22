@@ -12,4 +12,10 @@ open class PagerVM<Rep : IRepository, V: IView>() :BaseVM<Rep,V>(){
         this.view = view
         this.pagerAdapter = pagerAdapter
     }
+
+    open fun initialize(repository:Rep,view:V,pagerAdapter: FragmentStatePagerAdapter){
+        this.repository = repository
+        this.view = view
+        this.pagerAdapter = pagerAdapter
+    }
 }
