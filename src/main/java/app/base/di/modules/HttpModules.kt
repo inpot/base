@@ -27,7 +27,7 @@ object HttpModules {
     @Provides
     @PerApplication
     fun provideRetrofit(moshi: Moshi, context: Context, preference:SharedPreferences): Retrofit {
-        val baseUrl = context.getString(R.string.api_host)
+        val baseUrl = preference.getString("api_host",null) ?: context.getString(R.string.api_host)
         val okHttpBuilder= OkHttpClient.Builder()
         okHttpBuilder.connectTimeout(30, TimeUnit.SECONDS)
         okHttpBuilder.readTimeout(30, TimeUnit.SECONDS)
