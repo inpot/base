@@ -7,7 +7,7 @@ import io.reactivex.disposables.Disposable
 /**
  * Created by daniel on 18-1-31.
  */
-abstract class BaseObserver<T>(private val baseView: IBaseView): Observer<T>{
+abstract class BaseObserver<T>(protected val baseView: IBaseView): Observer<T>{
     override fun onComplete() {
         baseView.dismissLoading()
     }

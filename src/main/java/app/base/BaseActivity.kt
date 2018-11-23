@@ -71,7 +71,8 @@ abstract class BaseActivity : AppCompatActivity(), IBuildComp, IBaseView {
     }
 
     override fun onCreateLoadingDialog(): AppCompatDialog? {
-        val loadingDialog = NoBgDialog(this)
+        val loadingDialog = AppCompatDialog(this)
+        loadingDialog.window.setBackgroundDrawableResource(android.R.color.transparent);
         loadingDialog.setContentView(ProgressBar(this))
         return loadingDialog
     }
