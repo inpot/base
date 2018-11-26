@@ -11,24 +11,10 @@ import app.base.widget.ILoadMore
 /**
  * Created by daniel on 18-1-15.
  */
-abstract class BaseListVM<Rep : IRepository, V : IView, D : Any>() :ILoadMore, BaseVM<Rep, V>() {
-    lateinit var layoutManager: RecyclerView.LayoutManager
-    lateinit var adapter: BaseListAdapter<D>
+abstract class BaseListVM<Rep : IRepository, V : IView, D : Any>(repository: Rep, view: V, val layoutManager: RecyclerView.LayoutManager, val adapter: BaseListAdapter<D>) :ILoadMore, BaseVM<Rep, V>(repository,view) {
 
-    constructor(repository: Rep, view: V, layoutManager: RecyclerView.LayoutManager, adapter: BaseListAdapter<D>):this(){
-        this.repository = repository
-        this.view = view
-        this.adapter = adapter
+    init {
         adapter.loadMore = this
-        this.layoutManager = layoutManager
-    }
-
-    open fun initialize(repository: Rep, view: V, layoutManager: RecyclerView.LayoutManager, adapter: BaseListAdapter<D>) {
-        this.repository = repository
-        this.view = view
-        this.adapter = adapter
-        adapter.loadMore = this
-        this.layoutManager = layoutManager
     }
 
     open var PAGE_SIZE = 25
