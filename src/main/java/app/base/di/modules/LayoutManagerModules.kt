@@ -17,12 +17,12 @@ object LayoutManagerModules {
     @JvmStatic
     @Provides
     @Named(ListType.VERTICAL)
-    fun provideVerticalLayout( context: Context): RecyclerView.LayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+    fun provideVerticalLayout( context: Context): RecyclerView.LayoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false);
 
     @JvmStatic
     @Provides
     @Named(ListType.HORIZONTAL)
-    fun provideHorizontalLayout( context: Context): RecyclerView.LayoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+    fun provideHorizontalLayout( context: Context): RecyclerView.LayoutManager = LinearLayoutManager(context,RecyclerView.HORIZONTAL, false);
 
     @JvmStatic
     @Provides
