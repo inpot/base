@@ -11,7 +11,7 @@ abstract class BaseItemVM<T>(val data: T, private val onItemClick: OnItemClick<T
     constructor(data: T) : this(data,null)
 
     open fun onClick(view: View) {
-        onItemClick?.onItemClick(data)
+        onItemClick?.onItemClick(view,data)
     }
 
 }
