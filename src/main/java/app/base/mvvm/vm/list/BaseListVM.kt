@@ -1,8 +1,8 @@
 package app.base.mvvm.vm.list
 
 import androidx.databinding.ObservableBoolean
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import app.base.mvvm.repository.IRepository
 import app.base.mvvm.view.IView
 import app.base.mvvm.vm.BaseVM
@@ -11,7 +11,7 @@ import app.base.widget.ILoadMore
 /**
  * Created by daniel on 18-1-15.
  */
-abstract class BaseListVM<Rep : IRepository, V : IView, D : Any>(repository: Rep, view: V, val layoutManager: RecyclerView.LayoutManager, val adapter: BaseListAdapter<D>) :ILoadMore, BaseVM<Rep, V>(repository,view) {
+abstract class BaseListVM<Rep : IRepository, V : IView, D : Any>( repository: Rep, view: V, val layoutManager: RecyclerView.LayoutManager, val adapter: BaseListAdapter<D> ) : ILoadMore, BaseVM<Rep, V>(repository, view) {
 
     init {
         adapter.loadMore = this
@@ -51,16 +51,18 @@ abstract class BaseListVM<Rep : IRepository, V : IView, D : Any>(repository: Rep
         val size = result?.size ?: 0
         if (size < PAGE_SIZE) {
             adapter.footerType = BaseListAdapter.TYPE_FOOTER_NO_MORE
-        }else{
+        } else {
             adapter.footerType = BaseListAdapter.TYPE_FOOTER_LOADING
         }
 
-        if(result != null && size > 0){
-            val listSet = mutableListOf<D>()
+        val listSet = mutableListOf<D>()
+        if (result != null && size > 0) {
             listSet.addAll(result)
-            if(currentPage  == 0){
-                adapter.setData(listSet)
-            }else{
+        }
+        if (currentPage == 0) {
+            adapter.setData(listSet)
+        } else {
+            if(!listSet.isEmpty()){
                 adapter.addAll(listSet)
             }
         }
@@ -70,7 +72,7 @@ abstract class BaseListVM<Rep : IRepository, V : IView, D : Any>(repository: Rep
     fun bindError(errorCode: Int, msg: String) {
         loading = false
         refreshing.set(false)
-        if(currentPage>0){
+        if (currentPage > 0) {
             adapter.footerType = BaseListAdapter.TYPE_FOOTER_ERROR
         }
     }
