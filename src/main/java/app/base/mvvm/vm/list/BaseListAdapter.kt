@@ -3,6 +3,7 @@ package app.base.mvvm.vm.list
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.databinding.ObservableBoolean
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -19,6 +20,7 @@ abstract class BaseListAdapter<D : Any> : RecyclerView.Adapter<RecyclerView.View
     private lateinit var footerBinding: ViewDataBinding
     var lists: MutableList<D> = mutableListOf()
     var header: Boolean = false
+    val isEmpty = ObservableBoolean(true)
 
     var footerType: Int = TYPE_FOOTER_LOADING
         set(value) {
@@ -35,6 +37,7 @@ abstract class BaseListAdapter<D : Any> : RecyclerView.Adapter<RecyclerView.View
 
     fun clear() {
         lists.clear()
+        isEmpty.set(true)
         notifyItemRangeRemoved(0, itemCount - 1)
     }
 
@@ -45,12 +48,14 @@ abstract class BaseListAdapter<D : Any> : RecyclerView.Adapter<RecyclerView.View
         val start = itemCount
         lists.addAll(listSet)
         val end = itemCount - 1
+        isEmpty.set(itemCount == 0)
         notifyItemRangeInserted(start, end)
     }
 
     open fun setData(listSet: MutableList<D>) {
         lists.clear()
         lists.addAll(listSet)
+        isEmpty.set(itemCount == 0)
         notifyDataSetChanged()
     }
 
