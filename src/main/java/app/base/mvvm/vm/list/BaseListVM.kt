@@ -22,6 +22,8 @@ abstract class BaseListVM<Rep : IRepository, V : IView, D : Any>( repository: Re
     var refreshing = ObservableBoolean(false)
     var loading = false
 
+    val isEmpty = ObservableBoolean(true)
+
     val refreshingListener = SwipeRefreshLayout.OnRefreshListener {
         currentPage = 0
         loadData()
@@ -66,6 +68,7 @@ abstract class BaseListVM<Rep : IRepository, V : IView, D : Any>( repository: Re
                 adapter.addAll(listSet)
             }
         }
+        isEmpty.set(adapter.itemCount == 0)
         loading = false
     }
 
