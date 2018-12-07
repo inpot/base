@@ -23,6 +23,7 @@ abstract class BaseListVM<Rep : IRepository, V : IView, D : Any>( repository: Re
     var loading = false
 
     val isEmpty = ObservableBoolean(true)
+    val isError = ObservableBoolean(false)
 
     val refreshingListener = SwipeRefreshLayout.OnRefreshListener {
         currentPage = 0
@@ -50,6 +51,7 @@ abstract class BaseListVM<Rep : IRepository, V : IView, D : Any>( repository: Re
 
     fun bindResult(result: List<D>?) {
         refreshing.set(false)
+        isError.set(false)
         val size = result?.size ?: 0
         if (size < PAGE_SIZE) {
             adapter.footerType = BaseListAdapter.TYPE_FOOTER_NO_MORE
@@ -75,8 +77,11 @@ abstract class BaseListVM<Rep : IRepository, V : IView, D : Any>( repository: Re
     fun bindError(errorCode: Int, msg: String) {
         loading = false
         refreshing.set(false)
+        isEmpty.set(false)
         if (currentPage > 0) {
             adapter.footerType = BaseListAdapter.TYPE_FOOTER_ERROR
+        }else{
+            isError.set(true)
         }
     }
 
