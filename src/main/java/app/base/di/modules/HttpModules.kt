@@ -17,6 +17,7 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
+import javax.inject.Named
 
 /**
  * Created by daniel on 17-10-18.
@@ -27,7 +28,7 @@ object HttpModules {
     @JvmStatic
     @Provides
     @PerApplication
-    fun provideRetrofit(moshi: Moshi, context: Context, preference:SharedPreferences): Retrofit {
+    fun provideRetrofit(moshi: Moshi, context: Context,@Named(PreferenceModule.PREFERENCES_USER) preference:SharedPreferences): Retrofit {
         val baseUrl = preference.getString("api_host",null) ?: context.getString(R.string.api_host)
         Log.w("HttpModules","baseUrl $baseUrl")
         val okHttpBuilder = getOkHttpClient()
