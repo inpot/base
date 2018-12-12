@@ -2,6 +2,7 @@ package app.base
 
 import android.content.res.Resources
 import android.graphics.drawable.Drawable
+import android.text.*
 import androidx.databinding.InverseBindingAdapter
 import androidx.databinding.InverseBindingListener
 import com.google.android.material.appbar.AppBarLayout
@@ -13,10 +14,6 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import android.text.Editable
-import android.text.InputType
-import android.text.TextUtils
-import android.text.TextWatcher
 import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.CompoundButton
@@ -32,6 +29,7 @@ import app.base.widget.OnTextChanged
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.request.RequestOptions
+import java.util.regex.Pattern
 
 
 @BindingAdapter(value = ["normalTitleColor", "selectedTitleColor"], requireAll = true)
@@ -237,4 +235,16 @@ fun EditText.onTextChange(body :(txt:String?) -> Unit){
     })
 
 
+}
+
+@BindingAdapter(value = ["limitDecimal"])
+fun EditText.limitDecimal(limitDecimal:Int){
+    this.onTextChange {
+        val regex = "^\\d+.$"
+        val r = Pattern.compile(regex)
+        val matcher = r.matcher(it)
+        if (matcher.matches()) {
+            this.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(it!!.length +limitDecimal))
+        }
+    }
 }
