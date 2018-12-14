@@ -2,6 +2,7 @@ package app.base
 
 import android.content.res.Resources
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.text.*
 import androidx.databinding.InverseBindingAdapter
 import androidx.databinding.InverseBindingListener
@@ -86,6 +87,15 @@ fun loadImageByUrlBlur(imageView: ImageView, url: String?, placeHolder: Drawable
             .apply(option)
             .into(imageView)
     }
+}
+
+@BindingAdapter(value = ["blurImageUrl", "placeHolder"])
+fun loadImageByUrlBlur(imageView: ImageView, url: Uri, placeHolderRes: Int) {
+    val option = RequestOptions().placeholder(placeHolderRes).error(placeHolderRes).fallback(placeHolderRes)
+    Glide.with(imageView.context)
+        .load(url)
+        .apply(option)
+        .into(imageView)
 }
 
 @BindingAdapter(value = ["blurImageUrl", "placeHolder"])
