@@ -1,6 +1,7 @@
 package app.base.mvvm.vm.list
 
 import androidx.databinding.ObservableBoolean
+import androidx.databinding.ObservableInt
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import app.base.mvvm.repository.IRepository
@@ -22,8 +23,10 @@ abstract class BaseListVM<Rep : IRepository, V : IView, D : Any>( repository: Re
     var refreshing = ObservableBoolean(false)
     var loading = false
 
-    val isEmpty = ObservableBoolean(true)
-    val isError = ObservableBoolean(false)
+
+    val status = ObservableInt(STATUS_EMPTY)
+
+
 
     val refreshingListener = SwipeRefreshLayout.OnRefreshListener {
         currentPage = 0
@@ -51,7 +54,6 @@ abstract class BaseListVM<Rep : IRepository, V : IView, D : Any>( repository: Re
 
     fun bindResult(result: List<D>?) {
         refreshing.set(false)
-        isError.set(false)
         val size = result?.size ?: 0
         if (size < PAGE_SIZE) {
             adapter.footerType = BaseListAdapter.TYPE_FOOTER_NO_MORE
@@ -70,19 +72,24 @@ abstract class BaseListVM<Rep : IRepository, V : IView, D : Any>( repository: Re
                 adapter.addAll(listSet)
             }
         }
-        isEmpty.set(adapter.itemCount == 0)
+        status.set(if(adapter.itemCount > 0) STATUS_CONTENT else STATUS_EMPTY)
         loading = false
     }
 
     fun bindError(errorCode: Int, msg: String) {
         loading = false
         refreshing.set(false)
-        isEmpty.set(false)
         if (currentPage > 0) {
             adapter.footerType = BaseListAdapter.TYPE_FOOTER_ERROR
         }else{
-            isError.set(true)
+            adapter.clear()
+            status.set(STATUS_ERROR)
         }
+    }
+    companion object {
+        const val STATUS_CONTENT = 1
+        const val STATUS_EMPTY = 0
+        const val STATUS_ERROR = -1
     }
 
 }
