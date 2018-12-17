@@ -1,6 +1,7 @@
 package app.base.mvvm.repository
 
 import app.base.IBaseView
+import app.base.R
 import io.reactivex.Observer
 import io.reactivex.disposables.Disposable
 
@@ -17,8 +18,9 @@ abstract class BaseObserver<T>(protected val baseView: IBaseView): Observer<T>{
     }
 
     override fun onError(e: Throwable) {
+        e?.printStackTrace()
         baseView.dismissLoading()
-        baseView.showError(e)
+        baseView.showToast(R.string.connect_failed)
     }
 
 }

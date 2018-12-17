@@ -60,13 +60,6 @@ abstract class BaseFragment : Fragment(), IBuildComp, IBaseView {
     }
 
     @CallSuper
-    override fun showError(e: Throwable) {
-        val msg = e.message
-        msg?.apply { showToast(msg) }
-        e.printStackTrace()
-    }
-
-    @CallSuper
     override fun dismissLoading() {
         loadingDialog?.dismiss()
     }

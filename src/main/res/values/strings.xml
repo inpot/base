@@ -4,4 +4,5 @@
     <string name="load_error">加载失败</string>
     <string name="list_header">Header here</string>
     <string name="api_host">Please Config Api Host in app</string>
+    <string name="connect_failed">连接服务器失败,请检查网络连接</string>
 </resources>
