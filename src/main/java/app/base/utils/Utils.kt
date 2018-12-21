@@ -8,6 +8,7 @@ import java.util.regex.Pattern
 fun String?.toRMB():String{
     var result = "0.00"
     if(this != null && !TextUtils.isEmpty(this)){
+        result = this
         try {
             val bd = BigDecimal(this)
             result = bd.setScale(2,BigDecimal.ROUND_HALF_UP).toString()

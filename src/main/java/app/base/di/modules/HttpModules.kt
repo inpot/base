@@ -32,11 +32,11 @@ object HttpModules {
         okHttpBuilder.connectTimeout(30, TimeUnit.SECONDS)
         okHttpBuilder.readTimeout(30, TimeUnit.SECONDS)
         okHttpBuilder.writeTimeout(30,TimeUnit.SECONDS)
-//        if(BuildConfig.DEBUG) {
+        if(BuildConfig.DEBUG) {
             val logging = HttpLogInterceptor()
             logging.level = HttpLogInterceptor.Level.BODY
             okHttpBuilder.addInterceptor(logging)
-//        }
+        }
         okHttpBuilder.addInterceptor {
             val original = it.request();
             val token = preference.getString("token",null)
