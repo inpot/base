@@ -11,7 +11,7 @@ fun String?.toRMB():String{
         result = this
         try {
             val bd = BigDecimal(this)
-            result = bd.setScale(2,BigDecimal.ROUND_HALF_UP).toString()
+            result = bd.setScale(2,BigDecimal.ROUND_DOWN).toString()
         }catch (e:NumberFormatException){
             e.printStackTrace()
             Log.e("test","toRMB ${this} is not a number")
