@@ -28,15 +28,7 @@ object HttpModules {
     @PerApplication
     fun provideRetrofit(moshi: Moshi, context: Context, preference:SharedPreferences): Retrofit {
         val baseUrl = preference.getString("api_host",null) ?: context.getString(R.string.api_host)
-        val okHttpBuilder= OkHttpClient.Builder()
-        okHttpBuilder.connectTimeout(30, TimeUnit.SECONDS)
-        okHttpBuilder.readTimeout(30, TimeUnit.SECONDS)
-        okHttpBuilder.writeTimeout(30,TimeUnit.SECONDS)
-        if(BuildConfig.DEBUG) {
-            val logging = HttpLogInterceptor()
-            logging.level = HttpLogInterceptor.Level.BODY
-            okHttpBuilder.addInterceptor(logging)
-        }
+        val okHttpBuilder = getOkHttpClient()
         okHttpBuilder.addInterceptor {
             val original = it.request();
             val token = preference.getString("token",null)
@@ -57,6 +49,19 @@ object HttpModules {
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(MoshiConverterFactory.create(moshi))
         return builder.build()
+    }
+
+    fun getOkHttpClient():OkHttpClient.Builder{
+        val okHttpBuilder= OkHttpClient.Builder()
+        okHttpBuilder.connectTimeout(30, TimeUnit.SECONDS)
+        okHttpBuilder.readTimeout(30, TimeUnit.SECONDS)
+        okHttpBuilder.writeTimeout(30,TimeUnit.SECONDS)
+        if(BuildConfig.DEBUG) {
+            val logging = HttpLogInterceptor()
+            logging.level = HttpLogInterceptor.Level.BODY
+            okHttpBuilder.addInterceptor(logging)
+        }
+        return okHttpBuilder
     }
 
     @JvmStatic
