@@ -33,13 +33,24 @@ abstract class BaseActivity : AppCompatActivity(), IBuildComp, IBaseView {
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+       initDI()
+    }
+
+    fun initDI(){
         val application = application as BaseApplication
         activityComp = DaggerActivityComp.builder()
-                .appComp(application.appComp)
-                .activityModule(ActivityModule(this))
-                .build()
+            .appComp(application.appComp)
+            .activityModule(ActivityModule(this))
+            .build()
         buildComp()
     }
+
+
+    fun isInitialized():Boolean{
+        return ::activityComp.isInitialized
+    }
+
+
     @CallSuper
     override fun showToast(msg:String){
         Toast.makeText(this, msg,Toast.LENGTH_SHORT).show()

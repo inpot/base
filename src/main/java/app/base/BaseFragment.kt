@@ -56,6 +56,9 @@ abstract class BaseFragment : Fragment(), IBuildComp, IBaseView {
 
     fun activityComp(): ActivityComp {
         val tmp = activity as BaseActivity
+        if(!tmp.isInitialized()){
+            tmp.initDI()
+        }
         return tmp.activityComp
     }
 
