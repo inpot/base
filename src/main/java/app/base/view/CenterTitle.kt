@@ -122,7 +122,6 @@ object CenterTitle {
                 else left = mNavButtonView?.measuredWidth.orZero()
                 right = Math.min(toolbar.measuredWidth - leftSideMarginTitle, menuIconsMargin)
                 layoutParams.width = Math.min(toolbar.measuredWidth - leftSideMarginTitle, menuIconsMargin) - leftSideMarginTitle
-                text = text
             }
 
             // position sub title
