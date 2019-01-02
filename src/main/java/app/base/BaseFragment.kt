@@ -80,6 +80,7 @@ abstract class BaseFragment : Fragment(), IBuildComp, IBaseView {
         return if (tmp != null) {
             val loadingDialog = NoBgDialog(tmp)
             loadingDialog.setContentView(ProgressBar(tmp))
+            loadingDialog.setCanceledOnTouchOutside(false)
             loadingDialog
         }else{
             null
