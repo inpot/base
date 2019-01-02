@@ -87,16 +87,26 @@ abstract class BaseFragment : Fragment(), IBuildComp, IBaseView {
         }
     }
 
+    private var  toast: Toast? = null
     override fun showToast(msg: String) {
         context?.apply {
-            Toast.makeText(this,msg,Toast.LENGTH_SHORT).show()
+            if(toast == null){
+                toast = Toast.makeText(this,msg,Toast.LENGTH_SHORT)
+            }
+            toast?.setText(msg)
+            toast?.show()
+
         }
     }
 
     @CallSuper
     override fun showToast(msgId: Int) {
         context?.apply {
-            Toast.makeText(this, msgId, Toast.LENGTH_SHORT).show()
+            if(toast == null){
+                toast = Toast.makeText(this,msgId,Toast.LENGTH_SHORT)
+            }
+            toast?.setText(msgId)
+            toast?.show()
         }
     }
 }
