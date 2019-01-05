@@ -8,11 +8,14 @@ import app.base.mvvm.repository.IRepository
 import app.base.mvvm.view.IView
 import app.base.mvvm.vm.BaseVM
 import app.base.widget.ILoadMore
+import io.reactivex.Observer
+import io.reactivex.disposables.Disposable
 
 /**
  * Created by daniel on 18-1-15.
  */
-abstract class BaseListVM<Rep : IRepository, V : IView, D : Any>( repository: Rep, view: V, val layoutManager: RecyclerView.LayoutManager, val adapter: BaseListAdapter<D> ) : ILoadMore, BaseVM<Rep, V>(repository, view) {
+abstract class BaseListVM<Rep : IRepository, V : IView, D : Any>( repository: Rep, view: V, val layoutManager: RecyclerView.LayoutManager, val adapter: BaseListAdapter<D> )
+    : ILoadMore, Observer<List<D>>, BaseVM<Rep, V>(repository, view) {
 
     init {
         adapter.loadMore = this
@@ -86,6 +89,26 @@ abstract class BaseListVM<Rep : IRepository, V : IView, D : Any>( repository: Re
             status.set(STATUS_ERROR)
         }
     }
+
+    override fun onError(e: Throwable) {
+        e.printStackTrace()
+        bindError(-1, "网络错误,稍后再试")
+        view.dismissLoading()
+    }
+
+    override fun onNext(t: List<D>) {
+        bindResult(t)
+    }
+
+    override fun onComplete() {
+        view.dismissLoading()
+    }
+
+    override fun onSubscribe(d: Disposable) {
+        view.showLoading()
+    }
+
+
     companion object {
         const val STATUS_CONTENT = 1
         const val STATUS_EMPTY = 0

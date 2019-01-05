@@ -130,7 +130,7 @@ abstract class BaseListAdapter<D : Any> : RecyclerView.Adapter<RecyclerView.View
      */
     abstract fun onCreateItemBinding( layoutInflater: LayoutInflater, parent: ViewGroup ): ViewDataBinding
 
-    private fun onCreateHeaderBinding(layoutInflater: LayoutInflater, layoutId:Int, parent: ViewGroup): ViewDataBinding{
+    open fun onCreateHeaderBinding(layoutInflater: LayoutInflater, layoutId:Int, parent: ViewGroup): ViewDataBinding{
       return DataBindingUtil.inflate<ViewDataBinding>(layoutInflater,layoutId,parent,false)
     }
 
