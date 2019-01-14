@@ -55,11 +55,13 @@ abstract class BaseActivity : AppCompatActivity(), IBuildComp, IBaseView {
     private var  toast: Toast? = null
     @CallSuper
     override fun showToast(msg:String){
-        if(toast == null){
-            toast = Toast.makeText(this,msg,Toast.LENGTH_SHORT)
+        runOnUiThread {
+            if(toast == null){
+                toast = Toast.makeText(this,msg,Toast.LENGTH_SHORT)
+            }
+            toast?.setText(msg)
+            toast?.show()
         }
-        toast?.setText(msg)
-        toast?.show()
     }
 
     @CallSuper
