@@ -3,6 +3,7 @@ package app.base.di.modules
 import android.content.Context
 import android.content.SharedPreferences
 import android.text.TextUtils
+import android.util.Log
 import app.base.BuildConfig
 import app.base.R
 import app.base.di.HttpLogInterceptor
@@ -28,6 +29,7 @@ object HttpModules {
     @PerApplication
     fun provideRetrofit(moshi: Moshi, context: Context, preference:SharedPreferences): Retrofit {
         val baseUrl = preference.getString("api_host",null) ?: context.getString(R.string.api_host)
+        Log.w("HttpModules","baseUrl $baseUrl")
         val okHttpBuilder = getOkHttpClient()
         okHttpBuilder.addInterceptor {
             val original = it.request();
