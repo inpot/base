@@ -16,6 +16,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.view.View
+import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.CompoundButton
 import android.widget.EditText
@@ -31,6 +32,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.request.RequestOptions
 import java.util.regex.Pattern
+import kotlin.math.roundToInt
 
 
 @BindingAdapter(value = ["normalTitleColor", "selectedTitleColor"], requireAll = true)
@@ -257,4 +259,18 @@ fun EditText.limitDecimal(limitDecimal:Int){
             this.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(it!!.length +limitDecimal))
         }
     }
+}
+
+@BindingAdapter("android:layout_marginTop")
+fun setLayoutMarginTop(view: View,margin: Float) {
+    val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
+    layoutParams.topMargin = margin.roundToInt()
+    view.layoutParams = layoutParams
+}
+
+@BindingAdapter("android:layout_marginStart")
+fun setLayoutHeight(view: View,margin: Float) {
+    val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
+    layoutParams.marginStart = margin.roundToInt()
+    view.layoutParams = layoutParams
 }
