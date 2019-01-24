@@ -32,7 +32,6 @@ abstract class BaseListVM<Rep : IRepository, V : IView, D : Any>( repository: Re
 
 
     val refreshingListener = SwipeRefreshLayout.OnRefreshListener {
-        currentPage = 0
         loadData()
     }
 
@@ -40,6 +39,7 @@ abstract class BaseListVM<Rep : IRepository, V : IView, D : Any>( repository: Re
         if (loading) {
             return
         }
+        currentPage = 0
         loading = true
         onLoadData(currentPage)
     }
