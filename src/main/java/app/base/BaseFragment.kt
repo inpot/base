@@ -4,6 +4,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.annotation.CallSuper
 import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatDialog
@@ -19,12 +20,14 @@ import app.base.mvvm.repository.IRepository
 import app.base.mvvm.view.IView
 import app.base.mvvm.vm.BaseVM
 import app.base.widget.NoBgDialog
+import java.lang.Exception
 
 /**
  * Created by daniel on 18-1-26.
  */
 abstract class BaseFragment : Fragment(), IBuildComp, IBaseView {
 
+    val TAG = "BaseFragment"
     private var loadingDialog: AppCompatDialog? = null
     lateinit var mFragmentComp: FragmentComp
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,7 +67,15 @@ abstract class BaseFragment : Fragment(), IBuildComp, IBaseView {
 
     @CallSuper
     override fun dismissLoading() {
-        loadingDialog?.dismiss()
+        val showing = loadingDialog?.isShowing?:false
+        if(showing) {
+            try {
+                loadingDialog?.dismiss()
+            }catch (e:Exception){
+                Log.w(TAG,"dissmissLoading ${e.message}")
+                loadingDialog = null
+            }
+        }
     }
 
     @CallSuper
@@ -72,7 +83,15 @@ abstract class BaseFragment : Fragment(), IBuildComp, IBaseView {
         if (loadingDialog == null) {
             loadingDialog = onCreateLoadingDialog()
         }
-        loadingDialog?.show()
+        val canShow =  (activity?.isFinishing?:true).not()
+        if(canShow){
+            try {
+                loadingDialog?.show()
+            }catch (e:Exception){
+                Log.w(TAG,"showLoading ${e.message}")
+                loadingDialog = null
+            }
+        }
     }
 
     override fun onCreateLoadingDialog(): AppCompatDialog? {
@@ -90,23 +109,21 @@ abstract class BaseFragment : Fragment(), IBuildComp, IBaseView {
     private var  toast: Toast? = null
     override fun showToast(msg: String) {
         context?.apply {
-            if(toast == null){
-                toast = Toast.makeText(this,msg,Toast.LENGTH_SHORT)
+            try{
+                if(toast == null){
+                    toast = Toast.makeText(this,msg,Toast.LENGTH_SHORT)
+                }
+                toast?.setText(msg)
+                toast?.show()
+            }catch (e:Exception){
+                Log.w(TAG,"showToast ${e.message}")
+                toast = null
             }
-            toast?.setText(msg)
-            toast?.show()
-
         }
     }
 
     @CallSuper
     override fun showToast(msgId: Int) {
-        context?.apply {
-            if(toast == null){
-                toast = Toast.makeText(this,msgId,Toast.LENGTH_SHORT)
-            }
-            toast?.setText(msgId)
-            toast?.show()
-        }
+        context?.resources?.apply { showToast(getString(msgId)) }
     }
 }

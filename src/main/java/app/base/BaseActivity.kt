@@ -5,6 +5,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDialog
@@ -29,6 +30,7 @@ import app.base.widget.NoBgDialog
 abstract class BaseActivity : AppCompatActivity(), IBuildComp, IBaseView {
     lateinit var activityComp: ActivityComp
     private var loadingDialog: AppCompatDialog? = null
+    val TAG = "BaseActivity"
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,26 +58,36 @@ abstract class BaseActivity : AppCompatActivity(), IBuildComp, IBaseView {
     @CallSuper
     override fun showToast(msg:String){
         runOnUiThread {
-            if(toast == null){
-                toast = Toast.makeText(this,msg,Toast.LENGTH_SHORT)
+            try{
+
+                if(toast == null){
+                    toast = Toast.makeText(this,msg,Toast.LENGTH_SHORT)
+                }
+                toast?.setText(msg)
+                toast?.show()
+            }catch (e:Exception){
+                Log.w(TAG,"showToast ${e.message}")
+                toast = null
             }
-            toast?.setText(msg)
-            toast?.show()
         }
     }
 
     @CallSuper
     override fun showToast(msgId: Int) {
-        if(toast == null){
-            toast = Toast.makeText(this,msgId,Toast.LENGTH_SHORT)
-        }
-        toast?.setText(msgId)
-        toast?.show()
+        showToast(getString(msgId))
     }
 
     @CallSuper
     override fun dismissLoading() {
-        loadingDialog?.dismiss()
+        val showing = loadingDialog?.isShowing?:false
+        if(showing){
+            try{
+                loadingDialog?.dismiss()
+            }catch (e:Exception){
+                Log.w(TAG,"dissmissLoading ${e.message}")
+                loadingDialog = null
+            }
+        }
     }
 
     @CallSuper
@@ -83,7 +95,14 @@ abstract class BaseActivity : AppCompatActivity(), IBuildComp, IBaseView {
         if(loadingDialog == null){
             loadingDialog = onCreateLoadingDialog()
         }
-        loadingDialog?.show()
+        if(!isFinishing){
+            try{
+                loadingDialog?.show()
+            }catch (e:Exception){
+                Log.w(TAG,"showLoading ${e.message}")
+                loadingDialog = null
+            }
+        }
     }
 
     override fun onCreateLoadingDialog(): AppCompatDialog? {
