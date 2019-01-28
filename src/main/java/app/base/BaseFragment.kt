@@ -83,7 +83,7 @@ abstract class BaseFragment : Fragment(), IBuildComp, IBaseView {
         if (loadingDialog == null) {
             loadingDialog = onCreateLoadingDialog()
         }
-        val canShow =  (activity?.isFinishing?:true).not()
+        val canShow =  (!isRemoving && isResumed)
         if(canShow){
             try {
                 loadingDialog?.show()

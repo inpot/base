@@ -95,7 +95,7 @@ abstract class BaseActivity : AppCompatActivity(), IBuildComp, IBaseView {
         if(loadingDialog == null){
             loadingDialog = onCreateLoadingDialog()
         }
-        if(!isFinishing){
+        if(!isFinishing && !isDestroyed){
             try{
                 loadingDialog?.show()
             }catch (e:Exception){
