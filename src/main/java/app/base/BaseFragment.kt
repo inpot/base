@@ -1,5 +1,6 @@
 package app.base
 
+import android.app.Dialog
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import android.os.Build
@@ -12,6 +13,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.fragment.app.DialogFragment
 import app.base.di.IBuildComp
 import app.base.di.component.ActivityComp
 import app.base.di.component.DaggerFragmentComp
@@ -125,5 +127,21 @@ abstract class BaseFragment : Fragment(), IBuildComp, IBaseView {
     @CallSuper
     override fun showToast(msgId: Int) {
         context?.resources?.apply { showToast(getString(msgId)) }
+    }
+
+    override fun showDialog(dialog:Any?){
+        if(isVisible &&  !isDetached  && !isRemoving && fragmentManager != null){
+            try {
+                when(dialog){
+                    is Dialog ->{ dialog.show() }
+                    is DialogFragment -> {dialog.show(fragmentManager,"$dialog")}
+                    else ->{ Log.w(TAG," cannot show dialog type error:$dialog") }
+                }
+            }catch (e:Exception){
+                Log.w(TAG,"cannot show dialog: ${e.message}")
+            }
+        }else{
+            Log.w(TAG,"cannot show dialog: status error ")
+        }
     }
 }

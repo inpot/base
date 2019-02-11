@@ -1,5 +1,6 @@
 package app.base
 
+import android.app.Dialog
 import android.content.Context
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
@@ -14,6 +15,7 @@ import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.fragment.app.DialogFragment
 import app.base.di.IBuildComp
 import app.base.di.component.ActivityComp
 import app.base.di.component.DaggerActivityComp
@@ -21,7 +23,6 @@ import app.base.di.modules.ActivityModule
 import app.base.mvvm.repository.IRepository
 import app.base.mvvm.view.IView
 import app.base.mvvm.vm.BaseVM
-import app.base.widget.NoBgDialog
 
 /**
  * Created by daniel on 17-11-28.
@@ -95,14 +96,7 @@ abstract class BaseActivity : AppCompatActivity(), IBuildComp, IBaseView {
         if(loadingDialog == null){
             loadingDialog = onCreateLoadingDialog()
         }
-        if(!isFinishing && !isDestroyed){
-            try{
-                loadingDialog?.show()
-            }catch (e:Exception){
-                Log.w(TAG,"showLoading ${e.message}")
-                loadingDialog = null
-            }
-        }
+        showDialog(loadingDialog)
     }
 
     override fun onCreateLoadingDialog(): AppCompatDialog? {
@@ -160,4 +154,19 @@ abstract class BaseActivity : AppCompatActivity(), IBuildComp, IBaseView {
 //        imm.hideSoftInputFromWindow(currentFocus.windowToken, InputMethodManager.RESULT_UNCHANGED_SHOWN)
     }
 
+    override fun showDialog(dialog:Any?){
+        if(!isFinishing &&!isDestroyed){
+            try {
+                when(dialog){
+                    is Dialog ->{ dialog.show() }
+                    is DialogFragment -> {dialog.show(supportFragmentManager,"$dialog")}
+                    else ->{ Log.w(TAG," cannot show dialog type error:$dialog") }
+                }
+            }catch (e:Exception){
+                Log.w(TAG,"cannot show dialog: ${e.message}")
+            }
+        }else{
+            Log.w(TAG,"cannot show dialog: status error ")
+        }
+    }
 }

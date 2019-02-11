@@ -11,4 +11,5 @@ interface IBaseView{
     fun dismissLoading()
     fun showToast(msg:String)
     fun showToast(msgId:Int)
+    fun showDialog(dialog:Any?)
 }
