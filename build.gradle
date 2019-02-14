@@ -95,6 +95,8 @@ dependencies {
 
     // optional - RxJava support, currently in release candidate
     api "android.arch.paging:rxjava2:1.0.1"
+
+    api 'com.hjq:toast:5.2'
 }
 
 repositories {

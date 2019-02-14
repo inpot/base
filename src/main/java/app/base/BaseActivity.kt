@@ -14,7 +14,6 @@ import androidx.appcompat.widget.Toolbar
 import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
 import android.widget.ProgressBar
-import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import app.base.di.IBuildComp
 import app.base.di.component.ActivityComp
@@ -23,6 +22,7 @@ import app.base.di.modules.ActivityModule
 import app.base.mvvm.repository.IRepository
 import app.base.mvvm.view.IView
 import app.base.mvvm.vm.BaseVM
+import com.hjq.toast.ToastUtils
 
 /**
  * Created by daniel on 17-11-28.
@@ -53,29 +53,12 @@ abstract class BaseActivity : AppCompatActivity(), IBuildComp, IBaseView {
         return ::activityComp.isInitialized
     }
 
-
-
-    private var  toast: Toast? = null
-    @CallSuper
     override fun showToast(msg:String){
-        runOnUiThread {
-            try{
-
-                if(toast == null){
-                    toast = Toast.makeText(this,msg,Toast.LENGTH_SHORT)
-                }
-                toast?.setText(msg)
-                toast?.show()
-            }catch (e:Exception){
-                Log.w(TAG,"showToast ${e.message}")
-                toast = null
-            }
-        }
+       ToastUtils.show(msg)
     }
 
-    @CallSuper
     override fun showToast(msgId: Int) {
-        showToast(getString(msgId))
+        ToastUtils.show(msgId)
     }
 
     @CallSuper

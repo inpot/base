@@ -12,7 +12,6 @@ import androidx.appcompat.app.AppCompatDialog
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ProgressBar
-import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import app.base.di.IBuildComp
 import app.base.di.component.ActivityComp
@@ -22,6 +21,7 @@ import app.base.mvvm.repository.IRepository
 import app.base.mvvm.view.IView
 import app.base.mvvm.vm.BaseVM
 import app.base.widget.NoBgDialog
+import com.hjq.toast.ToastUtils
 import java.lang.Exception
 
 /**
@@ -108,25 +108,12 @@ abstract class BaseFragment : Fragment(), IBuildComp, IBaseView {
         }
     }
 
-    private var  toast: Toast? = null
-    override fun showToast(msg: String) {
-        context?.apply {
-            try{
-                if(toast == null){
-                    toast = Toast.makeText(this,msg,Toast.LENGTH_SHORT)
-                }
-                toast?.setText(msg)
-                toast?.show()
-            }catch (e:Exception){
-                Log.w(TAG,"showToast ${e.message}")
-                toast = null
-            }
-        }
+    override fun showToast(msg:String){
+        ToastUtils.show(msg)
     }
 
-    @CallSuper
     override fun showToast(msgId: Int) {
-        context?.resources?.apply { showToast(getString(msgId)) }
+        ToastUtils.show(msgId)
     }
 
     override fun showDialog(dialog:Any?){
