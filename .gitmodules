@@ -1,4 +1,0 @@
-[submodule "mvvmTemplate"]
-	path = mvvmTemplate
-	url = github:inpot/mvvmTemplate.git
-	branch = master
