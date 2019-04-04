@@ -7,7 +7,7 @@ import app.base.mvvm.view.IView
 /**
  * Created by daniel on 17-10-19.
  */
-abstract class BaseVM<Rep : IRepository, V: IView> (){
+abstract class BaseVM<Rep : IRepository, V: IView> ():ViewModel(){
     lateinit var repository:Rep
     lateinit var view:V
     constructor(repository:Rep,view:V) : this() {

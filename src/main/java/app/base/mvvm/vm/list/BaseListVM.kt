@@ -14,13 +14,10 @@ import io.reactivex.disposables.Disposable
 /**
  * Created by daniel on 18-1-15.
  */
-abstract class BaseListVM<Rep : IRepository, V : IView, D : Any>( repository: Rep, view: V, val layoutManager: RecyclerView.LayoutManager, val adapter: BaseListAdapter<D> )
-    : ILoadMore, Observer<List<D>>, BaseVM<Rep, V>(repository, view) {
+abstract class BaseListVM<Rep : IRepository, V : IView, D : Any> : ILoadMore, Observer<List<D>>, BaseVM<Rep, V>() {
 
-    init {
-        adapter.loadMore = this
-    }
-
+    lateinit var layoutManager: RecyclerView.LayoutManager
+    lateinit var  adapter: BaseListAdapter<D>
     open var PAGE_SIZE = 25
     private var currentPage = 0
     var refreshing = ObservableBoolean(false)
@@ -29,6 +26,13 @@ abstract class BaseListVM<Rep : IRepository, V : IView, D : Any>( repository: Re
 
     val status = ObservableInt(STATUS_EMPTY)
 
+    open fun initialize(repository:Rep,view:V,layoutManager: RecyclerView.LayoutManager,adapter: BaseListAdapter<D>){
+        super.initialize(repository, view)
+        this.adapter = adapter
+        this.adapter.loadMore = this
+        this.layoutManager = layoutManager
+
+    }
 
 
     val refreshingListener = SwipeRefreshLayout.OnRefreshListener {
