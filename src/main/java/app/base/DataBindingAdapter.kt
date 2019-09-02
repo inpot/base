@@ -3,11 +3,13 @@ package app.base
 import android.content.res.Resources
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.os.Build
 import android.text.*
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.*
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseBindingAdapter
@@ -116,8 +118,10 @@ fun setDrawableRight(textView: TextView, res: Int) {
 fun setTextRes(textView: TextView, textRes: Int, textColorRes: Int) {
     if (textRes > 0)
         textView.setText(textRes)
-    if (textColorRes > 0)
-        textView.setTextColor(textView.resources.getColor(textColorRes))
+    if (textColorRes > 0){
+            textView.setTextColor(ContextCompat.getColor(textView.context,textColorRes))
+
+    }
 }
 
 @BindingAdapter(value = ["onTextChanged"])
@@ -148,11 +152,11 @@ fun bindEditTextInputType(editText: EditText, showPassword: Boolean) {
 
 @BindingAdapter(value = ["orientation"])
 fun bindRecyclerView(recyclerView: RecyclerView, orientation: String) {
-    var ori = if (TextUtils.equals(orientation, ListType.HORIZONTAL)) RecyclerView.HORIZONTAL else RecyclerView.VERTICAL
+    var ori =
     when (orientation) {
-        ListType.HORIZONTAL -> ori = RecyclerView.HORIZONTAL
-        ListType.VERTICAL -> ori = RecyclerView.VERTICAL
-        else -> ori = RecyclerView.HORIZONTAL
+        ListType.HORIZONTAL ->  RecyclerView.HORIZONTAL
+        ListType.VERTICAL -> RecyclerView.VERTICAL
+        else ->  RecyclerView.HORIZONTAL
     }
     recyclerView.layoutManager = LinearLayoutManager(recyclerView.context, ori, false)
 }

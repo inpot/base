@@ -18,7 +18,7 @@ abstract class BaseObserver<T>(protected val baseView: IBaseView): Observer<T>{
     }
 
     override fun onError(e: Throwable) {
-        e?.printStackTrace()
+        e.printStackTrace()
         baseView.dismissLoading()
         baseView.showToast(R.string.connect_failed)
     }

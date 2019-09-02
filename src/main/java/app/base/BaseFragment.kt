@@ -117,11 +117,12 @@ abstract class BaseFragment : Fragment(), IBuildComp, IBaseView {
     }
 
     override fun showDialog(dialog:Any?){
-        if(isVisible &&  !isDetached  && !isRemoving && fragmentManager != null){
+        val fm = fragmentManager
+        if(isVisible &&  !isDetached  && !isRemoving && fm!= null){
             try {
                 when(dialog){
                     is Dialog ->{ dialog.show() }
-                    is DialogFragment -> {dialog.show(fragmentManager,"$dialog")}
+                    is DialogFragment -> {dialog.show(fm,"$dialog")}
                     else ->{ Log.w(TAG," cannot show dialog type error:$dialog") }
                 }
             }catch (e:Exception){
