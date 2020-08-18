@@ -4,16 +4,16 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
+
+    buildFeatures{
+        dataBinding = true
+    }
     compileSdkVersion rootProject.ext.compile_version
     defaultConfig {
         minSdkVersion rootProject.ext.minSdk_version
         targetSdkVersion rootProject.ext.target_version
         versionCode 1
         versionName "1.0"
-        dataBinding {
-            enabled = true
-        }
-
     }
     lintOptions {
         abortOnError false
