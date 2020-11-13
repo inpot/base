@@ -25,4 +25,9 @@ abstract class BaseVM<Rep : IRepository, V: IView> ():ViewModel(){
         this.view = view
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        repository.onCleared();
+    }
+
 }

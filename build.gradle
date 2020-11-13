@@ -79,6 +79,7 @@ dependencies {
     api "androidx.legacy:legacy-support-v4:${project.ext.androidx_legacy}"
     api "androidx.lifecycle:lifecycle-extensions:${project.ext.androidx_lifecycle}"
     api "androidx.lifecycle:lifecycle-runtime:${project.ext.androidx_lifecycle}"
+    api "androidx.lifecycle:lifecycle-viewmodel-ktx:${project.ext.androidx_lifecycle}"
     api "androidx.paging:paging-runtime:${project.ext.androidx_paging}" // For Kotlin use paging-runtime-ktx
     api "androidx.paging:paging-rxjava2:${project.ext.androidx_paging}" // For Kotlin use paging-rxjava2-ktx
 

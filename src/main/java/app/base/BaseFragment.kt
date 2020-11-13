@@ -43,7 +43,6 @@ abstract class BaseFragment : Fragment(), IBuildComp, IBaseView {
             layoutResId: Int,
             viewModel: BaseVM<P, V>): B {
         val binding = DataBindingUtil.inflate<B>(layoutInflater, layoutResId, container, false)
-        viewModel.repository.setLifecycleOwner(this)
         binding.setVariable(BR.vm, viewModel)
         if (ViewDataBinding.getBuildSdkInt() < Build.VERSION_CODES.KITKAT) {
             binding.executePendingBindings()

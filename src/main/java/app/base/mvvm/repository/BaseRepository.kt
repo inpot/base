@@ -14,14 +14,8 @@ import io.reactivex.schedulers.Schedulers
 /**
  * Created by daniel on 17-10-19.
  */
-abstract class BaseRepository : LifecycleObserver {
+abstract class BaseRepository : IRepository {
     private  val subject = PublishSubject.create<Lifecycle.Event>()
-    lateinit var owner: Lifecycle
-
-    fun setLifecycleOwner(owner: LifecycleOwner) {
-        owner.lifecycle.addObserver(this)
-        this.owner = owner.lifecycle
-    }
 
     fun <T> asyncRequest() = ObservableTransformer<T, T> {
             upstream -> upstream
@@ -36,15 +30,9 @@ abstract class BaseRepository : LifecycleObserver {
         return observable.takeUntil(subject)
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
-    fun onCreate() {
 
-    }
-
-    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-    fun onDestroy() {
+    override fun onCleared() {
         subject.onNext(Lifecycle.Event.ON_DESTROY)
         subject.onComplete()
-        owner.removeObserver(this)
     }
 }

@@ -104,7 +104,6 @@ abstract class BaseActivity : AppCompatActivity(), IBuildComp, IBaseView {
             setSupportActionBar(this)
         }
         supportActionBar?.setDisplayHomeAsUpEnabled(homeAsUp)
-        viewModel.repository.setLifecycleOwner(this)
         binding.setVariable(BR.vm, viewModel)
         if (ViewDataBinding.getBuildSdkInt() < Build.VERSION_CODES.KITKAT) {
             binding.executePendingBindings()
