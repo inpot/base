@@ -7,7 +7,7 @@ ext{
     androidx_legacy= '1.0.0'
     androidx_paging= '3.0.0'
     google_material = '1.1.0-alpha09'
-    dagger_version = '2.28.3'
+    dagger_version = '2.37'
     retrofit2_version = '2.9.0'
     rxjava2_version = '2.2.11'
     rxandroid = '2.1.1'
