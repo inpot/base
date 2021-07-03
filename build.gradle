@@ -11,7 +11,7 @@ ext{
     retrofit2_version = '2.9.0'
     rxjava2_version = '2.2.11'
     rxandroid = '2.1.1'
-    moshi_version = '1.9.3'
+    moshi_version = '1.11.0'
     glide_version = '4.7.1'
     target_version = 28
     compile_version = 28
