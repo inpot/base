@@ -18,7 +18,6 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Named
-import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 
 /**
  * Created by daniel on 17-10-18.
@@ -50,8 +49,7 @@ object HttpModules {
         }
         val builder = Retrofit.Builder().baseUrl(baseUrl)
                 .client(okHttpBuilder.build())
-                .addCallAdapterFactory(CoroutineCallAdapterFactory())// for coroutine
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create()) // for rxjava2
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(MoshiConverterFactory.create(moshi))
         return builder.build()
     }
