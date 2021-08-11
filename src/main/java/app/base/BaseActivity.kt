@@ -108,6 +108,7 @@ abstract class BaseActivity : AppCompatActivity(), IBuildComp, IBaseView {
         if (ViewDataBinding.getBuildSdkInt() < Build.VERSION_CODES.KITKAT) {
             binding.executePendingBindings()
         }
+        binding.lifecycleOwner = this //live data must add lifecycleOwner
         return binding
     }
 
